@@ -37,3 +37,7 @@ def delete_task(task_id):
     conn.commit()
     conn.close()
     return redirect(url_for('index'))
+
+if __name__ == '__main__’:
+    create_database()
+    app.run(debug=True)
