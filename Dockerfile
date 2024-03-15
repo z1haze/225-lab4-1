@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 
-CMD ["sqlite3", "/data/initial-db.sqlite"] && [ "python3", "main.py" ]
+CMD ["sqlite3", "todo.sqlite"] && [ "python3", "main.py" ]
