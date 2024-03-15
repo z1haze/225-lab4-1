@@ -51,9 +51,7 @@ pipeline {
         stage('Check Kubernetes Cluster') {
             steps {
                 script {
-                    sh "kubectl get pods"
-                    sh "kubectl get services"
-                    sh "kubectl get deploy"
+                    sh "kubectl get all"
                 }
             }
         }
