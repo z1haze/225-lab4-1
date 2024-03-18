@@ -4,11 +4,11 @@ import os
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
+def home():
     return render_template('index.html')
 
 @app.route("/page2")
-def hello():
+def page2():
     return render_template('page2.html')
 
 if __name__ == "__main__":
