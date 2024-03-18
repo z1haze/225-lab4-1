@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 
-CMD ["sqlite3", "todo.db"] && [ "python3", "main.py" ]
+CMD [ "python3", "main.py" ]
