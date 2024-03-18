@@ -7,7 +7,7 @@ RUN apt-get -y install \
     nginx \
     python3-dev \
     build-essential\
-    nfs-common\
+    nfs-common
 
 COPY . .
 RUN pip install -r requirements.txt
