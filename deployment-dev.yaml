@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flaskweb-deployment
+  name: 39-deployment
   labels:
-    app: flaskweb
+    app: flask
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flaskweb
+      app: flask
   template:
     metadata:
       labels:
-        app: flaskweb
+        app: flask
     spec:
       containers:
-        - name: flaskweb
+        - name: flask
           image: cithit/roseaw:latest
           ports:
             - containerPort: 5000
@@ -24,7 +24,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: flaskweb-service
+  name: flask-service
 spec:
   type: LoadBalancer 
   loadBalancerIP: 10.48.10.116                                     
@@ -33,4 +33,4 @@ spec:
     port: 5000
     targetPort: 5000
   selector:
-    app: flaskweb 
+    app: flask 
