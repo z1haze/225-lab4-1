@@ -8,9 +8,8 @@ RUN apt-get -y install \
     python3-dev \
     build-essential\
     nfs-common\
-    sqlite3
 
-COPY . .
+COPY ./ ./
 RUN pip install -r requirements.txt
 
 EXPOSE 5000
