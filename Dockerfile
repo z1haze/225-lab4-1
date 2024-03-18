@@ -9,7 +9,7 @@ RUN apt-get -y install \
     build-essential\
     nfs-common\
 
-COPY ./ ./
+COPY . .
 RUN pip install -r requirements.txt
 
 EXPOSE 5000
