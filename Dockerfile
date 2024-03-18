@@ -1,4 +1,4 @@
-FROM python:3.6-slim
+FROM python:3.9-slim
 
 RUN apt-get clean \
     && apt-get -y update
@@ -15,4 +15,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 
-CMD ["sqlite3", "todo.sqlite"] && [ "python3", "main.py" ]
+CMD ["sqlite3", "todo.db"] && [ "python3", "main.py" ]
