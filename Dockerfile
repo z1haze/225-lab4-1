@@ -7,7 +7,8 @@ RUN apt-get -y install \
     nginx \
     python3-dev \
     build-essential\
-    nfs-common
+    nfs-common\
+    sqlite3
 
 COPY . .
 RUN pip install -r requirements.txt
