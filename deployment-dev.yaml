@@ -43,7 +43,7 @@ metadata:
   name: flaskweb-service
 spec:
   type: LoadBalancer 
-  loadBalancerIP: 10.48.10.116                                     # <-----change this!!!!
+  loadBalancerIP: 10.48.10.116                                     
   ports:
   - protocol: TCP
     port: 5000
