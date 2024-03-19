@@ -13,11 +13,16 @@ def get_db():
 @app.route("/")
 def home():
     db = get_db()
-    # Example operation: Ensure a table exists
+    # Ensure the table exists
     db.execute('CREATE TABLE IF NOT EXISTS my_table (id INTEGER PRIMARY KEY, data TEXT)')
     db.commit()
-    return "SQLite3 database has been accessed and ensured 'my_table' exists."
-    return render_template('index.html')
+    
+    # Fetch data from the table
+    cursor = db.execute('SELECT id, data FROM my_table')
+    rows = cursor.fetchall()  # This gets all rows of the query result
+    
+    # Pass the data to the template
+    return render_template('index.html', rows=rows)
 
 @app.route("/page2")
 def page2():
@@ -25,4 +30,5 @@ def page2():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True,host='0.0.0.0',port=port)
+    app.run(debug=True, host='0.0.0.0', port=port)
+
