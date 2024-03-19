@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: 39-deployment
+  name: 312-deployment
   labels:
     app: flask
 spec:
@@ -25,7 +25,7 @@ spec:
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: nfs-pvc
+            claimName: roseaw-pvc
 
 ---
 apiVersion: v1
