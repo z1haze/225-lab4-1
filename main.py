@@ -4,7 +4,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-DATABASE = 'database.db'
+DATABASE = 'demo.db'
 
 def get_db():
     db = sqlite3.connect(DATABASE)
@@ -12,12 +12,12 @@ def get_db():
 
 @app.route("/")
 def home():
-    return render_template('index.html')
     db = get_db()
     # Example operation: Ensure a table exists
     db.execute('CREATE TABLE IF NOT EXISTS my_table (id INTEGER PRIMARY KEY, data TEXT)')
     db.commit()
     return "SQLite3 database has been accessed and ensured 'my_table' exists."
+    return render_template('index.html')
 
 @app.route("/page2")
 def page2():
