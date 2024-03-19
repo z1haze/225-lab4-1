@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["sudo mount -t nfs://10.48.228.21/roseaw /mnt/srv/samba/roseaw -o guest,iocharset=utf8"], && ["python3", "main.py" ]
+CMD ["sudo mkdir -p /mnt/nfs_clientshare"] && ["sudo mount -t nfs://10.48.228.21/mnt/srv/samba/roseaw /mnt/nfs_clientshare" ], && ["python3", "main.py" ]
