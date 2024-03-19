@@ -10,9 +10,9 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /samba/roseaw  # The path on the NFS server
+    path: srv/samba/roseaw  # The path on the NFS server
     server: 10.48.228.21
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Delete
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
