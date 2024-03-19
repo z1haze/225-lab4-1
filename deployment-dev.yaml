@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: roseaw-1-pv
+  name: roseaw-2-pv
   labels:
     type: nfs
 spec:
@@ -17,7 +17,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: roseaw-1-pvc
+  name: roseaw-2-pvc
 spec:
   accessModes:
     - ReadWriteMany
@@ -55,7 +55,7 @@ spec:
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: roseaw-1-pvc
+            claimName: roseaw-2-pvc
 ---
 apiVersion: v1
 kind: Service
