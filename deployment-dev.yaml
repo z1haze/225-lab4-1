@@ -19,6 +19,13 @@ spec:
           image: cithit/roseaw:latest
           ports:
             - containerPort: 5000
+          volumeMounts:
+            - name: nfs-storage
+              mountPath: /mnt/data
+      volumes:
+        - name: nfs-storage
+          persistentVolumeClaim:
+            claimName: nfs-pvc
 
 ---
 apiVersion: v1
@@ -33,4 +40,5 @@ spec:
     port: 5000
     targetPort: 5000
   selector:
-    app: flask 
+    app: flask
+
