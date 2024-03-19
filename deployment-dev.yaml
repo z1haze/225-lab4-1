@@ -10,7 +10,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path:  /roseaw         #change this
+    path:  /srv/samba/roseaw         #change this
     server: 10.48.228.21
   persistentVolumeReclaimPolicy: Delete
 ---
