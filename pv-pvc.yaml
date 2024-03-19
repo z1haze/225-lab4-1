@@ -11,7 +11,7 @@ spec:
     - ReadWriteMany
   nfs:
     path: /path/to/nfs/share  # The path on the NFS server
-    server: nfs-server.example.com  # The hostname or IP address of the NFS server
+    server: cit-file.regionals.miamioh.edu
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
