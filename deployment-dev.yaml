@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: roseaw-pv
+  name: roseaw-1-pv
   labels:
     type: nfs
 spec:
@@ -10,14 +10,14 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /srv/samba/roseaw  # The path on the NFS server
+    path: /roseaw  # The path on the NFS server
     server: 10.48.228.21
   persistentVolumeReclaimPolicy: Delete
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: roseaw-pvc
+  name: roseaw-1-pvc
 spec:
   accessModes:
     - ReadWriteMany
@@ -55,7 +55,7 @@ spec:
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: roseaw-pvc
+            claimName: roseaw-1-pvc
 ---
 apiVersion: v1
 kind: Service
