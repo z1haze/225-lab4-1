@@ -11,7 +11,7 @@ spec:
     - ReadWriteMany
   nfs:
     path: /path/to/nfs/share  # The path on the NFS server
-    server: cit-file.regionals.miamioh.edu
+    server: 10.48.228.21
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
