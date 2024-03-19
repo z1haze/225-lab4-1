@@ -7,8 +7,7 @@ RUN apt-get -y install \
     nginx \
     python3-dev \
     build-essential\
-    nfs-common\
-    nfs-utils
+    nfs-common
 
 COPY . .
 
