@@ -1,32 +1,49 @@
-from flask import Flask, render_template
-import os
+from flask import Flask, request, jsonify
 import sqlite3
+import os
 
 app = Flask(__name__)
 
+# Database file path
 DATABASE = 'demo.db'
 
 def get_db():
     db = sqlite3.connect(DATABASE)
+    db.row_factory = sqlite3.Row  # This enables name-based access to columns
     return db
 
-@app.route("/")
-def home():
-    db = get_db()
-    # Ensure the table exists
-    db.execute('CREATE TABLE IF NOT EXISTS my_table (id INTEGER PRIMARY KEY, data TEXT)')
-    db.commit()
-    
-    # Fetch data from the table
-    cursor = db.execute('SELECT id, data FROM my_table')
-    rows = cursor.fetchall()  # This gets all rows of the query result
-    
-    # Pass the data to the template
-    return render_template('index.html', rows=rows)
+def init_db():
+    with app.app_context():
+        db = get_db()
+        db.execute('CREATE TABLE IF NOT EXISTS contacts (id INTEGER PRIMARY KEY, name TEXT, phone TEXT)')
+        db.commit()
 
-@app.route("/page2")
-def page2():
-    return render_template('page2.html')
+@app.route('/')
+def index():
+    return "Welcome to the Flask SQLite app. Use /add?name=NAME&phone=PHONE to add a contact."
+
+@app.route('/add')
+def add_contact():
+    name = request.args.get('name', '')
+    phone = request.args.get('phone', '')
+    if not name or not phone:
+        return "Missing name or phone number", 400
+    
+    db = get_db()
+    db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+    db.commit()
+    return jsonify({"success": True, "message": "Contact added successfully."})
+
+@app.route('/contacts')
+def list_contacts():
+    db = get_db()
+    contacts = db.execute('SELECT * FROM contacts').fetchall()
+    return jsonify([{"id": row["id"], "name": row["name"], "phone": row["phone"]} for row in contacts])
+
+if __name__ == '__main__':
+    init_db()  # Initialize the database and table
+    app.run(debug=True)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
