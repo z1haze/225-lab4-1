@@ -56,7 +56,6 @@ spec:
         - name: nfs-storage
           persistentVolumeClaim:
             claimName: roseaw-pvc
-
 ---
 apiVersion: v1
 kind: Service
