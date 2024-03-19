@@ -26,6 +26,7 @@ def init_db():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    message = ''  # Message indicating the result of the operation
     if request.method == 'POST':
         name = request.form.get('name')
         phone = request.form.get('phone')
@@ -33,11 +34,32 @@ def index():
             db = get_db()
             db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
             db.commit()
-            return jsonify({"success": True, "message": "Contact added successfully."})
+            message = 'Contact added successfully.'
         else:
-            return jsonify({"success": False, "message": "Missing name or phone number."}), 400
+            message = 'Missing name or phone number.'
 
-    # Display the HTML form
+    # Always display the contacts table
+    db = get_db()
+    contacts = db.execute('SELECT * FROM contacts').fetchall()
+    contacts_table = '''
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+            </tr>
+    '''
+    for row in contacts:
+        contacts_table += f'''
+            <tr>
+                <td>{row['id']}</td>
+                <td>{row['name']}</td>
+                <td>{row['phone']}</td>
+            </tr>
+        '''
+    contacts_table += '</table>'
+
+    # Display the HTML form along with the contacts table
     return render_template_string('''
         <!DOCTYPE html>
         <html>
@@ -53,15 +75,11 @@ def index():
                 <input type="text" id="phone" name="phone" required><br><br>
                 <input type="submit" value="Submit">
             </form>
+            <p>{{message}}</p>
+            {{contacts_table}}
         </body>
         </html>
-    ''')
-
-@app.route('/contacts')
-def list_contacts():
-    db = get_db()
-    contacts = db.execute('SELECT * FROM contacts').fetchall()
-    return jsonify([{"id": row["id"], "name": row["name"], "phone": row["phone"]} for row in contacts])
+    ''', message=message, contacts_table=contacts_table)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
