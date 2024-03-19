@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Your Name Here!</title>
+    <meta charset="UTF-8">
+    <title>Database Table</title>
 </head>
 <body>
-    <h5>Your Name Here</h5>
-
+    <h1>Database Table Contents</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Data</th>
+        </tr>
+        {% for row in rows %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
