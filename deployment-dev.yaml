@@ -10,7 +10,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /roseaw  # The path on the NFS server
+    path: //10.48.228.21/roseaw  # The path on the NFS server
     server: 10.48.228.21
   persistentVolumeReclaimPolicy: Delete
 ---
