@@ -40,12 +40,8 @@ def list_contacts():
     contacts = db.execute('SELECT * FROM contacts').fetchall()
     return jsonify([{"id": row["id"], "name": row["name"], "phone": row["phone"]} for row in contacts])
 
-if __name__ == '__main__':
-    init_db()  # Initialize the database and table
-    app.run(debug=True)
-
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    init_db()  # Initialize the database and table
     app.run(debug=True, host='0.0.0.0', port=port)
 
