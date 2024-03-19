@@ -8,7 +8,7 @@ RUN apt-get -y install \
     python3-dev \
     build-essential\
     nfs-common\
-    cifs-utils
+    nfs-utils
 
 COPY . .
 
@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["sudo mount -t cifs //10.48.228.21/roseaw /mnt/srv/samba/roseaw -o guest,iocharset=utf8"], && ["python3", "main.py" ]
+CMD ["sudo mount -t nfs://10.48.228.21/roseaw /mnt/srv/samba/roseaw -o guest,iocharset=utf8"], && ["python3", "main.py" ]
