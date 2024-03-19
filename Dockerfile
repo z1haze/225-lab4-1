@@ -7,7 +7,8 @@ RUN apt-get -y install \
     nginx \
     python3-dev \
     build-essential\
-    nfs-common
+    nfs-common\
+    cifs-utils
 
 COPY . .
 
@@ -15,4 +16,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5000
 
-CMD [ "python3", "main.py" ]
+CMD ["sudo mount -t cifs //10.48.228.21/roseaw /mnt/srv/samba/roseaw -o guest,iocharset=utf8"], && ["python3", "main.py" ]
