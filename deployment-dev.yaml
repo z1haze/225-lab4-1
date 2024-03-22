@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: flaskapp-pv
+  name: roseaw-9-pv
   labels:
     type: nfs
 spec:
@@ -10,14 +10,14 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path:  /srv/nfs/roseaw         #local reference, this needs to match your MiamiID!
+    path:  /srv/nfs/roseaw         #local reference
     server: 10.48.10.140
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: flaskapp-pvc    
+  name: roseaw-9-pvc    #claim name
 spec:
   accessModes:
     - ReadWriteMany
@@ -51,11 +51,11 @@ spec:
             - containerPort: 5000
           volumeMounts:
             - name: nfs-storage
-              mountPath: /nfs       
+              mountPath: /nfs       #local mount name
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: flaskapp-pvc    
+            claimName: roseaw-9-pvc    #claim
 ---
 apiVersion: v1
 kind: Service
@@ -63,7 +63,7 @@ metadata:
   name: flask-service
 spec:
   type: LoadBalancer 
-  loadBalancerIP: 10.48.10.116     # <---change this to your LoadBalanced IP                                
+  loadBalancerIP: 10.48.10.116                                     
   ports:
   - protocol: TCP
     port: 5000
