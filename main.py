@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template_string, redirect, url_for
+from flask import Flask, request, render_template_string, redirect, url_for
 import sqlite3
 import os
 
@@ -24,42 +24,20 @@ def init_db():
         ''')
         db.commit()
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    message = ''  # Message indicating the result of the operation
-    contacts = []
-    if request.method == 'POST':
-        name = request.form.get('name')
-        phone = request.form.get('phone')
-        if name and phone:
-            db = get_db()
-            db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
-            db.commit()
-            message = 'Contact added successfully.'
-        else:
-            message = 'Missing name or phone number.'
-
-    # Always display the contacts table
+@app.route('/')
+def home():
+    # Fetch all contacts to display
     db = get_db()
     contacts = db.execute('SELECT * FROM contacts').fetchall()
-
-    # Display the HTML form along with the contacts table
     return render_template_string('''
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Add Contact</title>
+            <title>Contacts Home</title>
         </head>
         <body>
-            <h2>Add Contact</h2>
-            <form method="POST" action="/">
-                <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" required><br>
-                <label for="phone">Phone Number:</label><br>
-                <input type="text" id="phone" name="phone" required><br><br>
-                <input type="submit" value="Submit">
-            </form>
-            <p>{{ message }}</p>
+            <h2>Contacts</h2>
+            <a href="{{ url_for('add_contact') }}">Add New Contact</a>
             {% if contacts %}
                 <table border="1">
                     <tr>
@@ -81,43 +59,59 @@ def index():
                     {% endfor %}
                 </table>
             {% else %}
-                <p>No contacts found.</p>
+                <p>No contacts found. Add a new contact.</p>
             {% endif %}
         </body>
         </html>
-    ''', message=message, contacts=contacts)
+    ''', contacts=contacts)
 
-@app.route('/modify/<int:contact_id>', methods=['GET', 'POST'])
-def modify_contact(contact_id):
-    db = get_db()
-    contact = db.execute('SELECT * FROM contacts WHERE id = ?', (contact_id,)).fetchone()
-
-    # If the contact doesn't exist, redirect to the index
-    if contact is None:
-        return redirect(url_for('index'))
-
+@app.route('/add', methods=['GET', 'POST'])
+def add_contact():
+    message = ''
     if request.method == 'POST':
         name = request.form['name']
         phone = request.form['phone']
-        db.execute('UPDATE contacts SET name = ?, phone = ? WHERE id = ?', (name, phone, contact_id))
-        db.commit()
-        return redirect(url_for('index'))
+        if name and phone:
+            db = get_db()
+            db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+            db.commit()
+            return redirect(url_for('home'))
+        else:
+            message = 'Name and phone number are required.'
 
-    # Show a form to modify a contact
     return render_template_string('''
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Modify Contact</title>
+            <title>Add Contact</title>
         </head>
         <body>
-            <h2>Modify Contact</h2>
-            <form method="POST" action="{{ url_for('modify_contact', contact_id=contact['id']) }}">
+            <h2>Add Contact</h2>
+            <form method="POST" action="{{ url_for('add_contact') }}">
                 <label for="name">Name:</label><br>
-                <input type="text" id="name" name="name" value="{{ contact['name'] }}" required><br>
+                <input type="text" id="name" name="name" required><br>
                 <label for="phone">Phone Number:</label><br>
-                <input type="text" id="phone" name="phone" value="{{ contact['phone'] }}" required><br><br>
-                <input type="submit" value="Save Changes">
+                <input type="text" id="phone" name="phone" required><br><br>
+                <input type="submit" value="Add Contact">
             </form>
+            <p>{{ message }}</p>
+            <a href="{{ url_for('home') }}">Back to Contacts</a>
         </body>
         </html>
+    ''', message=message)
+
+@app.route('/modify/<int:contact_id>', methods=['GET', 'POST'])
+def modify_contact(contact_id):
+    # ... existing modify_contact code ...
+
+@app.route('/delete/<int:contact_id>')
+def delete_contact(contact_id):
+    db = get_db()
+    db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
+    db.commit()
+    return redirect(url_for('home'))
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    init_db()  # Initialize the database and table
+    app.run(debug=True, host='0.0.0.0', port=port)
