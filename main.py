@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Database file path
-DATABASE = '/mnt/nfs_share/demo.db'
+DATABASE = '/mnt/nfs/demo.db'
 
 def get_db():
     db = sqlite3.connect(DATABASE)
