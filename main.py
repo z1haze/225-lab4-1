@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, jsonify, render_template_string, redirect, url_for
 import sqlite3
 import os
 
@@ -66,12 +66,17 @@ def index():
                         <th>ID</th>
                         <th>Name</th>
                         <th>Phone Number</th>
+                        <th>Actions</th>
                     </tr>
                     {% for contact in contacts %}
                         <tr>
                             <td>{{ contact['id'] }}</td>
                             <td>{{ contact['name'] }}</td>
                             <td>{{ contact['phone'] }}</td>
+                            <td>
+                                <a href="{{ url_for('modify_contact', contact_id=contact['id']) }}">Modify</a> |
+                                <a href="{{ url_for('delete_contact', contact_id=contact['id']) }}">Delete</a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -82,7 +87,37 @@ def index():
         </html>
     ''', message=message, contacts=contacts)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    init_db()  # Initialize the database and table
-    app.run(debug=True, host='0.0.0.0', port=port)
+@app.route('/modify/<int:contact_id>', methods=['GET', 'POST'])
+def modify_contact(contact_id):
+    db = get_db()
+    contact = db.execute('SELECT * FROM contacts WHERE id = ?', (contact_id,)).fetchone()
+
+    # If the contact doesn't exist, redirect to the index
+    if contact is None:
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        name = request.form['name']
+        phone = request.form['phone']
+        db.execute('UPDATE contacts SET name = ?, phone = ? WHERE id = ?', (name, phone, contact_id))
+        db.commit()
+        return redirect(url_for('index'))
+
+    # Show a form to modify a contact
+    return render_template_string('''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Modify Contact</title>
+        </head>
+        <body>
+            <h2>Modify Contact</h2>
+            <form method="POST" action="{{ url_for('modify_contact', contact_id=contact['id']) }}">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" value="{{ contact['name'] }}" required><br>
+                <label for="phone">Phone Number:</label><br>
+                <input type="text" id="phone" name="phone" value="{{ contact['phone'] }}" required><br><br>
+                <input type="submit" value="Save Changes">
+            </form>
+        </body>
+        </html>
