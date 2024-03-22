@@ -10,8 +10,8 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path:  /roseaw         #local reference
-    server: local
+    path:  /nfs         #local reference
+    server: 10.48.10.140
   persistentVolumeReclaimPolicy: Delete
 ---
 apiVersion: v1
@@ -51,7 +51,7 @@ spec:
             - containerPort: 5000
           volumeMounts:
             - name: nfs-storage
-              mountPath: /mnt/nfs_clientshare/       #local mount name
+              mountPath: /mnt/nfs       #local mount name
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
