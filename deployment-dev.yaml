@@ -17,7 +17,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: flaskapp-pvc    #claim name
+  name: flaskapp-pvc    
 spec:
   accessModes:
     - ReadWriteMany
@@ -51,11 +51,11 @@ spec:
             - containerPort: 5000
           volumeMounts:
             - name: nfs-storage
-              mountPath: /nfs       #local mount name
+              mountPath: /nfs       
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: flaskapp-pvc    #claim
+            claimName: flaskapp-pvc    
 ---
 apiVersion: v1
 kind: Service
