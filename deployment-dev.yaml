@@ -12,7 +12,7 @@ spec:
   nfs:
     path:  /srv/nfs/roseaw         #local reference
     server: 10.48.10.140
-  persistentVolumeReclaimPolicy: Delete
+  persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
