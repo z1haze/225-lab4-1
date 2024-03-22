@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: roseaw-8-pv
+  name: roseaw-9-pv
   labels:
     type: nfs
 spec:
@@ -10,14 +10,14 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path:  /srv/samba/roseaw         #change this
-    server: 10.48.228.21
+    path:  /roseaw         #local reference
+    server: local
   persistentVolumeReclaimPolicy: Delete
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: roseaw-8-pvc    #change this
+  name: roseaw-9-pvc    #claim name
 spec:
   accessModes:
     - ReadWriteMany
@@ -51,11 +51,11 @@ spec:
             - containerPort: 5000
           volumeMounts:
             - name: nfs-storage
-              mountPath: /mnt/nfs_clientshare/       #change this
+              mountPath: /mnt/nfs_clientshare/       #local mount name
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
-            claimName: roseaw-8-pvc    #change this
+            claimName: roseaw-9-pvc    #claim
 ---
 apiVersion: v1
 kind: Service
