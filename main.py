@@ -1,5 +1,4 @@
-
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, render_template_string, redirect, url_for
 import sqlite3
 import os
 
@@ -28,17 +27,24 @@ def init_db():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     message = ''  # Message indicating the result of the operation
-    contacts = []
     if request.method == 'POST':
-        name = request.form.get('name')
-        phone = request.form.get('phone')
-        if name and phone:
+        # Check if it's a delete action
+        if request.form.get('action') == 'delete':
+            contact_id = request.form.get('contact_id')
             db = get_db()
-            db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+            db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
             db.commit()
-            message = 'Contact added successfully.'
+            message = 'Contact deleted successfully.'
         else:
-            message = 'Missing name or phone number.'
+            name = request.form.get('name')
+            phone = request.form.get('phone')
+            if name and phone:
+                db = get_db()
+                db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
+                db.commit()
+                message = 'Contact added successfully.'
+            else:
+                message = 'Missing name or phone number.'
 
     # Always display the contacts table
     db = get_db()
@@ -67,12 +73,20 @@ def index():
                         <th>ID</th>
                         <th>Name</th>
                         <th>Phone Number</th>
+                        <th>Delete</th>
                     </tr>
                     {% for contact in contacts %}
                         <tr>
                             <td>{{ contact['id'] }}</td>
                             <td>{{ contact['name'] }}</td>
                             <td>{{ contact['phone'] }}</td>
+                            <td>
+                                <form method="POST" action="/">
+                                    <input type="hidden" name="contact_id" value="{{ contact['id'] }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="submit" value="Delete">
+                                </form>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
