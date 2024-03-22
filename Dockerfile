@@ -4,9 +4,9 @@ FROM python:3.9-slim
 RUN apt-get clean && apt-get -y update && apt-get -y install nginx python3-dev build-essential nfs-common && rm -rf /var/lib/apt/lists/*
 
 # Create mount point for NFS
-RUN mkdir -p /nfs
+#RUN mkdir -p /nfs
 
-COPY /data/demo.db /nfs
+#COPY /data/demo.db /nfs
 
 # Copy application files
 COPY . .
