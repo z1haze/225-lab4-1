@@ -70,7 +70,6 @@ def index():
             {% if contacts %}
                 <table border="1">
                     <tr>
-                        <th>ID</th>
                         <th>Name</th>
                         <th>Phone Number</th>
                         <th>Delete</th>
