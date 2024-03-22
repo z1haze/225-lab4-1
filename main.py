@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template_string, redirect, url_for
+
+from flask import Flask, request, jsonify, render_template_string
 import sqlite3
 import os
 
@@ -24,61 +25,26 @@ def init_db():
         ''')
         db.commit()
 
-@app.route('/')
-def home():
-    # Fetch all contacts to display
-    db = get_db()
-    contacts = db.execute('SELECT * FROM contacts').fetchall()
-    return render_template_string('''
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Contacts Home</title>
-        </head>
-        <body>
-            <h2>Contacts</h2>
-            <a href="{{ url_for('add_contact') }}">Add New Contact</a>
-            {% if contacts %}
-                <table border="1">
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Phone Number</th>
-                        <th>Actions</th>
-                    </tr>
-                    {% for contact in contacts %}
-                        <tr>
-                            <td>{{ contact['id'] }}</td>
-                            <td>{{ contact['name'] }}</td>
-                            <td>{{ contact['phone'] }}</td>
-                            <td>
-                                <a href="{{ url_for('modify_contact', contact_id=contact['id']) }}">Modify</a> |
-                                <a href="{{ url_for('delete_contact', contact_id=contact['id']) }}">Delete</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <p>No contacts found. Add a new contact.</p>
-            {% endif %}
-        </body>
-        </html>
-    ''', contacts=contacts)
-
-@app.route('/add', methods=['GET', 'POST'])
-def add_contact():
-    message = ''
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    message = ''  # Message indicating the result of the operation
+    contacts = []
     if request.method == 'POST':
-        name = request.form['name']
-        phone = request.form['phone']
+        name = request.form.get('name')
+        phone = request.form.get('phone')
         if name and phone:
             db = get_db()
             db.execute('INSERT INTO contacts (name, phone) VALUES (?, ?)', (name, phone))
             db.commit()
-            return redirect(url_for('home'))
+            message = 'Contact added successfully.'
         else:
-            message = 'Name and phone number are required.'
+            message = 'Missing name or phone number.'
 
+    # Always display the contacts table
+    db = get_db()
+    contacts = db.execute('SELECT * FROM contacts').fetchall()
+
+    # Display the HTML form along with the contacts table
     return render_template_string('''
         <!DOCTYPE html>
         <html>
@@ -87,29 +53,35 @@ def add_contact():
         </head>
         <body>
             <h2>Add Contact</h2>
-            <form method="POST" action="{{ url_for('add_contact') }}">
+            <form method="POST" action="/">
                 <label for="name">Name:</label><br>
                 <input type="text" id="name" name="name" required><br>
                 <label for="phone">Phone Number:</label><br>
                 <input type="text" id="phone" name="phone" required><br><br>
-                <input type="submit" value="Add Contact">
+                <input type="submit" value="Submit">
             </form>
             <p>{{ message }}</p>
-            <a href="{{ url_for('home') }}">Back to Contacts</a>
+            {% if contacts %}
+                <table border="1">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                    </tr>
+                    {% for contact in contacts %}
+                        <tr>
+                            <td>{{ contact['id'] }}</td>
+                            <td>{{ contact['name'] }}</td>
+                            <td>{{ contact['phone'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No contacts found.</p>
+            {% endif %}
         </body>
         </html>
-    ''', message=message)
-
-@app.route('/modify/<int:contact_id>', methods=['GET', 'POST'])
-def modify_contact(contact_id):
-    # ... existing modify_contact code ...
-
-@app.route('/delete/<int:contact_id>')
-def delete_contact(contact_id):
-    db = get_db()
-    db.execute('DELETE FROM contacts WHERE id = ?', (contact_id,))
-    db.commit()
-    return redirect(url_for('home'))
+    ''', message=message, contacts=contacts)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
