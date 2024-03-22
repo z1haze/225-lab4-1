@@ -51,7 +51,7 @@ spec:
             - containerPort: 5000
           volumeMounts:
             - name: nfs-storage
-              mountPath: /mnt/nfs       #local mount name
+              mountPath: /nfs       #local mount name
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:
