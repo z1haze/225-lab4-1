@@ -77,7 +77,6 @@ def index():
                     </tr>
                     {% for contact in contacts %}
                         <tr>
-                            <td>{{ contact['id'] }}</td>
                             <td>{{ contact['name'] }}</td>
                             <td>{{ contact['phone'] }}</td>
                             <td>
