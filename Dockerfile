@@ -6,6 +6,8 @@ RUN apt-get clean && apt-get -y update && apt-get -y install nginx python3-dev b
 # Create mount point for NFS
 RUN mkdir -p /mnt/nfs
 
+COPY /data/demo.db /mnt/nfs
+
 # Copy application files
 COPY . .
 
