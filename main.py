@@ -55,7 +55,7 @@ def index():
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Add Contact</title>
+            <title>Contacts</title>
         </head>
         <body>
             <h2>Add Contact</h2>
